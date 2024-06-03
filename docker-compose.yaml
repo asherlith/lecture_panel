@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  panel_db:
+    container_name: panel_db
+    image: postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'asher'
+      DEBUG: 'True'
+
+    volumes:
+      - panel_db:/var/lib/postgresql/data
+
+  panel_api:
+    container_name: panel_api
+
+    build:
+      context: .
+      dockerfile: "docker/Dockerfile"
+
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    command: ["python", "/app/university_panel/manage.py", "runserver", "0.0.0.0:8000"]
+    environment:
+      DB_NAME: 'postgres'
+      DB_USER: 'postgres'
+      DB_PASSWORD: 'asher'
+      DEBUG: 'True'
+
+    depends_on:
+      - panel_db
+    volumes:
+      - .:/app
+
+
+  panel_redis:
+    container_name : panel_redis
+    image: redis
+    restart: unless-stopped
+
+volumes:
+  panel_db:
