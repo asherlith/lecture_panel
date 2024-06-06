@@ -25,7 +25,7 @@ services:
     restart: unless-stopped
     ports:
       - "8000:80"
-    command: ["python", "/app/university_panel/manage.py", "runserver", "0.0.0.0:8000"]
+    command: ["python", "/app/university_panel/manage.py", "runserver", "0:80"]
     environment:
       DB_NAME: 'postgres'
       DB_USER: 'postgres'

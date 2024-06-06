@@ -1,4 +1,7 @@
+from enum import Enum
+
 from django.db import models
+from django.db.models import TextChoices
 
 from user.models import Profile
 
@@ -6,14 +9,14 @@ from user.models import Profile
 class Course(models.Model):
     name = models.CharField(max_length=30)
     prerequisite = models.ForeignKey(
-        'Course',
+        'self',
         on_delete=models.CASCADE,
         null=True,
         blank=True,
         related_name='pre_courses'
     )
     corequisite = models.ForeignKey(
-        'Course',
+        'self',
         on_delete=models.CASCADE,
         null=True,
         blank=True,
@@ -56,13 +59,10 @@ class Lecture(models.Model):
 
     )
     credits_count = models.IntegerField()
-    semester = models.ManyToManyField(through='SemesterLecture', to='Semester')
 
 
 class Student(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='student')
-    name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
     study_field = models.ForeignKey(
         StudyField,
         on_delete=models.CASCADE,
@@ -70,41 +70,13 @@ class Student(models.Model):
         null=True,
         related_name='students'
     )
-    phone = models.CharField(max_length=30, blank=True, null=True)
-    email = models.CharField(max_length=30, blank=True, null=True)
-    semesters = models.ManyToManyField(through='StudentSemester', to='Semester')
-    lectures = models.ManyToManyField(through='StudentLecture', to='Lecture')
+    lectures = models.ManyToManyField(through='StudentLecture', to='Lecture', null=True, blank=True)
 
 
-class SemesterLecture(models.Model):
-    semester = models.ForeignKey(
-        'Semester',
-        on_delete=models.CASCADE,
-        related_name='semester'
-
-    )
-    lecture = models.ForeignKey(
-        'Lecture',
-        on_delete=models.CASCADE,
-        related_name='lecture'
-    )
-
-
-class Semester(models.Model):
-    title = models.CharField(max_length=100)
-
-
-class StudentSemester(models.Model):
-    student = models.ForeignKey(
-        Student,
-        on_delete=models.CASCADE,
-        related_name='student_semester'
-    )
-    semester = models.ForeignKey(
-        Semester,
-        on_delete=models.CASCADE,
-        related_name='student_lecture'
-    )
+class LectureEnum(TextChoices):
+    PASS = 'pass', 'پاس'
+    FAIL = 'fail', 'رد'
+    NO_STATUS = 'no status', 'داده خالی'
 
 
 class StudentLecture(models.Model):
@@ -118,8 +90,4 @@ class StudentLecture(models.Model):
         on_delete=models.CASCADE,
         related_name='lectures'
     )
-    semester = models.ForeignKey(
-        Semester,
-        on_delete=models.CASCADE,
-        related_name='semesters'
-    )
+    status = models.CharField(choices=LectureEnum, default=LectureEnum.PASS)
