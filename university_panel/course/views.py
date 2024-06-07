@@ -1,4 +1,5 @@
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -10,6 +11,7 @@ from .serializers import LectureSerializer, InputLectureSerializer, CourseSerial
 
 class LectureView(APIView):
     serializer_class = InputLectureSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         return Response(
@@ -36,6 +38,7 @@ class LectureView(APIView):
 
 class DetailLectureView(APIView):
     serializer_class = LectureSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         return Response(
@@ -89,6 +92,7 @@ class CourseView(APIView):
 
 
 class StudentDetailLectureView(APIView):
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         profile = request.user.profiles.last()
