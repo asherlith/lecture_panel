@@ -88,7 +88,16 @@ class CourseView(APIView):
 
 class StudentDetailLessonsView(APIView):
 
-    # def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_student:
+            student = request.user.profile.student
+            stu_lec = StudentLecture.objects.filter(student=student)
+            lectures = [lec for lec in stu_lec.lecture]
+            return Response(LectureSerializer(lectures, many=True).data)
+
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN, data='مجاز به این عمل نیستید.')
+
     def post(self, request, *args, **kwargs):
         if request.user.is_student:
             student = request.user.profile.student
