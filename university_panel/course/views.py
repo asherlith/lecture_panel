@@ -18,7 +18,7 @@ class LectureView(APIView):
         )
 
     def post(self, request, *args, **kwargs):
-        if not request.user.is_student:
+        if not request.user.profiles.last().is_student:
             lecture = InputLectureSerializer(data=request.data)
             if lecture.is_valid():
                 lecture = lecture.save()
@@ -35,21 +35,21 @@ class LectureView(APIView):
         )
 
 
-class DetailLessonView(APIView):
+class DetailLectureView(APIView):
     serializer_class = LectureSerializer
 
     def get(self, request, *args, **kwargs):
         return Response(
             data=self.serializer_class(
-                Lecture.objects.filter(kwargs.get('pk').first())
-            )
+                Lecture.objects.filter(pk=kwargs.get('pk')).first()).data
+
         )
 
     def delete(self, request, *args, **kwargs):
-        if not request.user.is_student:
+        if not request.user.profiles.last().is_student:
 
             try:
-                Lecture.objects.filter(kwargs.get('pk')).first().delete()
+                Lecture.objects.filter(pk=kwargs.get('pk')).first().delete()
 
                 return Response(
                     status=status.HTTP_200_OK,
@@ -72,8 +72,10 @@ class LecturerView(APIView):
     def get(self, request, *args, **kwargs):
         return Response(
             data=self.serializer_class(
-                Lecturer.objects.all())
-            )
+                Lecturer.objects.all(),
+                many=True
+            ).data
+        )
 
 
 class CourseView(APIView):
@@ -82,33 +84,38 @@ class CourseView(APIView):
     def get(self, request, *args, **kwargs):
         return Response(
             data=self.serializer_class(
-                Course.objects.all())
-            )
+                Course.objects.all(),
+                many=True).data
+        )
 
 
-class StudentDetailLessonsView(APIView):
+class StudentDetailLectureView(APIView):
 
     def get(self, request, *args, **kwargs):
-        if request.user.is_student:
-            student = request.user.profile.student
+        profile = request.user.profiles.last()
+
+        if profile.is_student:
+            student = profile.student.last()
             stu_lec = StudentLecture.objects.filter(student=student)
-            lectures = [lec for lec in stu_lec.lecture]
+            lectures = [lec.lecture for lec in stu_lec]
             return Response(LectureSerializer(lectures, many=True).data)
 
         else:
             return Response(status=status.HTTP_403_FORBIDDEN, data='مجاز به این عمل نیستید.')
 
     def post(self, request, *args, **kwargs):
-        if request.user.is_student:
-            student = request.user.profile.student
+        profile = request.user.profiles.last()
+
+        if profile.is_student:
+            student = profile.student.last()
             lecture_id = request.data.get('lecture_id')
-            if StudentLecture.objects.filter(student=student, lecture__pk=lecture_id, status=LectureEnum.PASS):
+            if StudentLecture.objects.filter(student=student, lecture_id=lecture_id, status=LectureEnum.PASS):
                 return Response(
                     status=status.HTTP_403_FORBIDDEN,
                     data='مجاز به اخذ این درس نیستید.'
                 )
             else:
-                StudentLecture.objects.create(student=student, lecture__pk=lecture_id, status=LectureEnum.NO_STATUS)
+                StudentLecture.objects.create(student=student, lecture_id=lecture_id, status=LectureEnum.NO_STATUS)
 
                 return Response(
                     status=status.HTTP_403_FORBIDDEN,
@@ -116,13 +123,15 @@ class StudentDetailLessonsView(APIView):
                 )
 
     def delete(self, request, *args, **kwargs):
-        if request.user.is_student:
-            student = request.user.profile.student
+        profile = request.user.profiles.last()
+
+        if profile.is_student:
+            student = profile.student.last()
             lecture_id = request.data.get('lecture_id')
 
             lec = StudentLecture.objects.filter(
                 student=student,
-                lecture__pk=lecture_id,
+                lecture_id=lecture_id,
                 status=LectureEnum.NO_STATUS
             ).last()
 
@@ -137,6 +146,3 @@ class StudentDetailLessonsView(APIView):
                     status=status.HTTP_403_FORBIDDEN,
                     data='مجاز به انجام این عمل نیستید.'
                 )
-
-
-
