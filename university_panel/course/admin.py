@@ -9,7 +9,7 @@ class StudentLectureInline(admin.TabularInline):
 
 @admin.register(Lecture)
 class LectureAdmin(admin.ModelAdmin):
-    ...
+    pass
 
 
 @admin.register(Lecturer)
