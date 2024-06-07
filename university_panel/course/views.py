@@ -2,12 +2,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Lecture, Lecturer, Course, StudentLecture, LectureEnum
+from .models import Lecture, Lecturer, Course, StudentLecture
+from reusable.enums import LectureEnum
 from .serializers import LectureSerializer, InputLectureSerializer, CourseSerializer, \
     LecturerSerializer
 
-
-# Create your views here.
 
 class LectureView(APIView):
     serializer_class = InputLectureSerializer
@@ -27,11 +26,11 @@ class LectureView(APIView):
                 )
             return Response(
                 status=status.HTTP_406_NOT_ACCEPTABLE,
-                data='اطلاعات به درستی وارد نشده است.'
+                data={'data': 'اطلاعات به درستی وارد نشده است.'}
             )
         return Response(
             status=status.HTTP_403_FORBIDDEN,
-            data='مجاز به انجام این عمل نمی باشید.'
+            data={'data': 'مجاز به انجام این عمل نمی باشید.'}
         )
 
 
@@ -53,16 +52,16 @@ class DetailLectureView(APIView):
 
                 return Response(
                     status=status.HTTP_200_OK,
-                    data='درس با موفقیت حذف گشت.')
+                    data={'data': 'درس با موفقیت حذف گشت.'})
 
             except:
                 return Response(
                     status=status.HTTP_400_BAD_REQUEST,
-                    data='حذف درس موفقیت آمیز نبود.')
+                    data={'data': 'حذف درس موفقیت آمیز نبود.'})
 
         return Response(
             status=status.HTTP_403_FORBIDDEN,
-            data='مجاز به انجام این عمل نمی باشید.'
+            data={'data': 'مجاز به انجام این عمل نمی باشید.'}
         )
 
 
@@ -101,7 +100,7 @@ class StudentDetailLectureView(APIView):
             return Response(LectureSerializer(lectures, many=True).data)
 
         else:
-            return Response(status=status.HTTP_403_FORBIDDEN, data='مجاز به این عمل نیستید.')
+            return Response(status=status.HTTP_403_FORBIDDEN, data={'data': 'مجاز به این عمل نیستید.'})
 
     def post(self, request, *args, **kwargs):
         profile = request.user.profiles.last()
@@ -112,14 +111,14 @@ class StudentDetailLectureView(APIView):
             if StudentLecture.objects.filter(student=student, lecture_id=lecture_id, status=LectureEnum.PASS):
                 return Response(
                     status=status.HTTP_403_FORBIDDEN,
-                    data='مجاز به اخذ این درس نیستید.'
+                    data={'data': 'مجاز به اخذ این درس نیستید.'}
                 )
             else:
                 StudentLecture.objects.create(student=student, lecture_id=lecture_id, status=LectureEnum.NO_STATUS)
 
                 return Response(
                     status=status.HTTP_403_FORBIDDEN,
-                    data='درس ثبت گشت.'
+                    data={'data': 'درس ثبت گشت.'}
                 )
 
     def delete(self, request, *args, **kwargs):
@@ -139,10 +138,10 @@ class StudentDetailLectureView(APIView):
                 lec.delete()
                 return Response(
                     status=status.HTTP_200_OK,
-                    data='با موفقیت حذف گشت.'
+                    data={'data': 'با موفقیت حذف گشت.'}
                 )
             else:
                 return Response(
                     status=status.HTTP_403_FORBIDDEN,
-                    data='مجاز به انجام این عمل نیستید.'
+                    data={'data': 'مجاز به انجام این عمل نیستید.'}
                 )

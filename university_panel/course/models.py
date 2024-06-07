@@ -1,8 +1,6 @@
-from enum import Enum
-
 from django.db import models
-from django.db.models import TextChoices
 
+from reusable.enums import LectureEnum
 from user.models import Profile
 
 
@@ -23,9 +21,15 @@ class Course(models.Model):
         related_name='co_courses'
     )
 
+    def __str__(self):
+        return self.name
+
 
 class StudyField(models.Model):
     title = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.title
 
 
 class Lecturer(models.Model):
@@ -40,6 +44,9 @@ class Lecturer(models.Model):
     )
     phone = models.CharField(max_length=30, blank=True, null=True)
     email = models.CharField(max_length=30, blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.name} {self.last_name}'
 
 
 class Lecture(models.Model):
@@ -60,6 +67,9 @@ class Lecture(models.Model):
     )
     credits_count = models.IntegerField()
 
+    def __str__(self):
+        return self.title
+
 
 class Student(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='student')
@@ -72,11 +82,8 @@ class Student(models.Model):
     )
     lectures = models.ManyToManyField(through='StudentLecture', to='Lecture', null=True, blank=True)
 
-
-class LectureEnum(TextChoices):
-    PASS = 'pass', 'پاس'
-    FAIL = 'fail', 'رد'
-    NO_STATUS = 'no status', 'داده خالی'
+    def __str__(self):
+        return f'{self.profile.user.first_name} {self.profile.user.last_name}'
 
 
 class StudentLecture(models.Model):
@@ -91,3 +98,6 @@ class StudentLecture(models.Model):
         related_name='lectures'
     )
     status = models.CharField(choices=LectureEnum, default=LectureEnum.PASS)
+
+    def __str__(self):
+        return f'{self.student.profile.user.first_name} {self.student.profile.user.last_name} --- {self.lecture.title}'

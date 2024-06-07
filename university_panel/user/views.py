@@ -17,7 +17,7 @@ class RegisterView(APIView):
         if request.user.is_authenticated:
             return Response(
                 status=status.HTTP_406_NOT_ACCEPTABLE,
-                data='این کاربر قبلا ثبت نام کرده است.'
+                data={'data': 'این کاربر قبلا ثبت نام کرده است.'}
             )
         try:
             with transaction.atomic():
@@ -40,13 +40,13 @@ class RegisterView(APIView):
 
             return Response(
                 status=status.HTTP_201_CREATED,
-                data='کاربر با موفقیت ثبت شد.'
+                data={'data': 'کاربر با موفقیت ثبت شد.' }
             )
 
         except Exception as e:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
-                data=f'ثبت کاربر با خطا {e}مواجه شد. لطفا بعدا تلاش کنید.'
+                data={'data': f'ثبت کاربر با خطا {e}مواجه شد. لطفا بعدا تلاش کنید.'}
             )
 
 
@@ -68,6 +68,6 @@ class LoginView(APIView):
             )
         return Response(
             status=status.HTTP_403_FORBIDDEN,
-            data='اطلاعات نادرست است.'
+            data={'data': 'اطلاعات نادرست است.'}
         )
 

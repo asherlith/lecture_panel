@@ -1,12 +1,7 @@
-from django.db.models import IntegerChoices
-from django.utils.translation import gettext_lazy as _
+from django.db.models import TextChoices
 
 
-class Weekday(IntegerChoices):
-    mon = 0, _('دوشنبه')
-    tue = 1, _('سه شنبه')
-    wed = 2, _(' چهارشنبه شنبه')
-    thu = 3, _('دوشنبه')
-    fri = 4, _('دوشنبه')
-    sat = 5, _('دوشنبه')
-    sun = 6, _('دوشنبه')
+class LectureEnum(TextChoices):
+    PASS = 'pass', 'پاس'
+    FAIL = 'fail', 'رد'
+    NO_STATUS = 'no status', 'داده خالی'
