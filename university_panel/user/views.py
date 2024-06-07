@@ -22,16 +22,19 @@ class RegisterView(APIView):
         try:
             with transaction.atomic():
                 user = User.objects.create_user(
-                    username=request.GET.get('username'),
-                    password=request.GET.get('password')
+                    first_name=request.data.get('first_name'),
+                    last_name=request.data.get('last_name'),
+                    email=request.data.get('email'),
+                    username=request.data.get('username'),
+                    password=request.data.get('password')
                 )
 
-                token = Token.objects.create(user=user).last()
+                token = Token.objects.create(user=user)
 
                 profile = Profile.objects.create(
                     user=user,
                     is_student=True,
-                    national_code=request.GET.get('national_code')
+                    national_code=request.data.get('national_code')
                 )
                 student = Student.objects.create(profile=profile)
 
@@ -49,16 +52,19 @@ class RegisterView(APIView):
 
 class LoginView(APIView):
     def post(self, request, *args, **kwargs):
-        username = request.GET.get('username')
-        password = request.GET.get('password')
+        username = request.data.get('username')
+        password = request.data.get('password')
 
         if authenticate(username=username, password=password):
-            user = User.objects.filter(username=username, password=password)
+            user = User.objects.filter(username=username).last()
             token = Token.objects.filter(user=user).last()
+
+            if not token:
+                token = Token.objects.create(user=user)
 
             return Response(
                 status=status.HTTP_202_ACCEPTED,
-                data=token
+                data={'data': str(token)}
             )
         return Response(
             status=status.HTTP_403_FORBIDDEN,
