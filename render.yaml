@@ -1,0 +1,22 @@
+databases:
+  - name: panel_db
+    plan: free
+    databaseName: panel_db
+    user: postgres
+
+services:
+  - type: web
+    plan: free
+    name: panel_api
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "python -m gunicorn university_panel.university_panel.asgi:application -k uvicorn.workers.UvicornWorker"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: panel_db
+          property: 'postgresql://postgres:asher@panel_db:5432/postgres',
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
