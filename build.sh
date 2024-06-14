@@ -8,7 +8,7 @@ cd university_panel
 
 # Convert static asset files
 python manage.py collectstatic --no-input
-python manage.py createsuperuser --no-input
+python manage.py createsuperuser --no-input --username root
 
 
 # Apply any outstanding database migrations
