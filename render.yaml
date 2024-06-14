@@ -15,7 +15,7 @@ services:
       - key: postgresql://postgres:asher@panel_db:5432/postgres
         fromDatabase:
           name: panel_db
-          property: postgresql://postgres:asher@panel_db:5432/postgres
+          property: "postgresql://postgres:asher@panel_db:5432/postgres"
       - key: SECRET_KEY
         generateValue: true
       - key: WEB_CONCURRENCY
