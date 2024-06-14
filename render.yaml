@@ -10,7 +10,7 @@ services:
     name: panel_api
     runtime: python
     buildCommand: "./build.sh"
-    startCommand: "python -m gunicorn university_panel.university_panel.asgi:application -k uvicorn.workers.UvicornWorker"
+    startCommand: "cd university_panel && python -m gunicorn university_panel.asgi:application -k uvicorn.workers.UvicornWorker"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
