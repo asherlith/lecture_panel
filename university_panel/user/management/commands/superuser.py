@@ -6,9 +6,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         # The magic line
-        User.objects.create_user(username= 'root',
-                                email='root@super.com',
-                                password='root',
+        User.objects.create_user(username= 'asher',
+                                email='asher@super.com',
+                                password='asher',
                                 is_staff=True,
                                 is_active=True,
                                 is_superuser=True
