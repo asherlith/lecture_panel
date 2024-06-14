@@ -12,7 +12,7 @@ services:
     buildCommand: "./build.sh"
     startCommand: "python -m gunicorn university_panel.university_panel.asgi:application -k uvicorn.workers.UvicornWorker"
     envVars:
-      - key: postgresql://postgres:asher@panel_db:5432/postgres
+      - key: postgres://postgres:asher@panel_db:5432/postgres
         fromDatabase:
           name: panel_db
           property: connectionString
