@@ -29,7 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['panel-api-6d10.onrender.com', 'http://127.0.0.1:5500/', 'localhost', '127.0.0.1']
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_HEADERS = ['*']
+# CORS_ALLOW_HEADERS = ['*']
 
 # Application definition
 
