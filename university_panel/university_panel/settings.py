@@ -27,15 +27,9 @@ SECRET_KEY = 'django-insecure-c8lb_p5r)smxrsp9ay51kczd7muf7k(ywfn3k(dc2gw*7&2h^k
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-CORS_ALLOW_HEADERS = list(default_headers) + [
-    'access-control-allow-origin',
-]
+
 ALLOWED_HOSTS = ['panel-api-6d10.onrender.com', 'http://127.0.0.1:5500/', 'localhost', '127.0.0.1']
-CORS_ORIGIN_REGEX_WHITELIST = (
-    r'^(https?://)?localhost(:\d+)?$',
-    r'^(http?://)?localhost(:\d+)?$',
-    r'^(https?:\/\/)panel-api-6d10\.onrender\.com(:\d+)?$',
-)
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -63,6 +57,15 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'access-control-allow-origin',
+]
+CORS_ORIGIN_REGEX_WHITELIST = (
+    r'^(https?://)?localhost(:\d+)?$',
+    r'^(http?://)?localhost(:\d+)?$',
+    r'^(https?:\/\/)panel-api-6d10\.onrender\.com(:\d+)?$',
+)
 
 ROOT_URLCONF = 'university_panel.urls'
 
