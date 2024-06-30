@@ -31,7 +31,11 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     'access-control-allow-origin',
 ]
 ALLOWED_HOSTS = ['panel-api-6d10.onrender.com', 'http://127.0.0.1:5500/', 'localhost', '127.0.0.1']
-
+CORS_ORIGIN_REGEX_WHITELIST = (
+    r'^(https?://)?localhost(:\d+)?$',
+    r'^(http?://)?localhost(:\d+)?$',
+    r'^(https?:\/\/)panel-api-6d10\.onrender\.com(:\d+)?$',
+)
 # Application definition
 
 INSTALLED_APPS = [
