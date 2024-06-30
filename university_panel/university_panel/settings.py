@@ -17,6 +17,7 @@ import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+from corsheaders.defaults import default_headers
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -26,10 +27,10 @@ SECRET_KEY = 'django-insecure-c8lb_p5r)smxrsp9ay51kczd7muf7k(ywfn3k(dc2gw*7&2h^k
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'access-control-allow-origin',
+]
 ALLOWED_HOSTS = ['panel-api-6d10.onrender.com', 'http://127.0.0.1:5500/', 'localhost', '127.0.0.1']
-CORS_ALLOW_ALL_ORIGINS = True
-# CORS_ALLOW_HEADERS = ['*']
 
 # Application definition
 
