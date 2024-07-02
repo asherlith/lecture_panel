@@ -40,7 +40,7 @@ class RegisterView(APIView):
 
             return Response(
                 status=status.HTTP_201_CREATED,
-                data={'data': 'کاربر با موفقیت ثبت شد.' }
+                data={'data': 'کاربر با موفقیت ثبت شد.'}
             )
 
         except Exception as e:
@@ -58,16 +58,30 @@ class LoginView(APIView):
         if authenticate(username=username, password=password):
             user = User.objects.filter(username=username).last()
             token = Token.objects.filter(user=user).last()
+            if kwargs.get('login_type') == "student":
 
-            if not token:
-                token = Token.objects.create(user=user)
+                if user.profile.first().is_student:
+                    if not token:
+                        token = Token.objects.create(user=user)
 
-            return Response(
-                status=status.HTTP_202_ACCEPTED,
-                data={'data': str(token)}
-            )
+                    return Response(
+                        status=status.HTTP_202_ACCEPTED,
+                        data={'data': str(token)}
+                    )
+                else:
+                    return Response(
+                        status=status.HTTP_403_FORBIDDEN,
+                        data={'data': 'اطلاعات نادرست است.'}
+                    )
+
+            elif kwargs.get('login_type') == "admin":
+                if not user.profile.first().is_student:
+                    return Response(
+                        status=status.HTTP_202_ACCEPTED,
+                        data={'data': str(token)}
+                    )
+
         return Response(
             status=status.HTTP_403_FORBIDDEN,
             data={'data': 'اطلاعات نادرست است.'}
         )
-
