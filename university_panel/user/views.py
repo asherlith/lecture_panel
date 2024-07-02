@@ -60,7 +60,7 @@ class LoginView(APIView):
             token = Token.objects.filter(user=user).last()
             if kwargs.get('login_type') == "student":
 
-                if user.profile.first().is_student:
+                if user.profiles.first().is_student:
                     if not token:
                         token = Token.objects.create(user=user)
 
@@ -75,7 +75,7 @@ class LoginView(APIView):
                     )
 
             elif kwargs.get('login_type') == "admin":
-                if not user.profile.first().is_student:
+                if not user.profiles.first().is_student:
                     return Response(
                         status=status.HTTP_202_ACCEPTED,
                         data={'data': str(token)}
