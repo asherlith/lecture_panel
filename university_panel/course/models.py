@@ -68,7 +68,7 @@ class Lecture(models.Model):
     day = models.CharField(null=True, blank=True, max_length=20)
 
     def __str__(self):
-        return self.title
+        return self.course.name
 
 
 class Student(models.Model):
