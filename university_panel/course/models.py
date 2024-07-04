@@ -50,7 +50,6 @@ class Lecturer(models.Model):
 
 
 class Lecture(models.Model):
-    title = models.CharField(max_length=30)
     times = models.JSONField(default=dict)
     course = models.ForeignKey(
         Course,
@@ -66,6 +65,7 @@ class Lecture(models.Model):
 
     )
     credits_count = models.IntegerField()
+    day = models.CharField(null=True, blank=True, max_length=20)
 
     def __str__(self):
         return self.title

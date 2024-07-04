@@ -31,7 +31,7 @@ class InputLectureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lecture
         fields = (
-            'title',
+            'day',
             'times',
             'course',
             'lecturer',
@@ -46,11 +46,10 @@ class LectureSerializer(serializers.ModelSerializer):
         model = Lecture
         fields = (
             'id',
-            'title',
+            'day',
             'times',
             'course',
             'lecturer',
             'credits_count',
-
         )
 
