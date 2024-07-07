@@ -41,6 +41,7 @@ class InputLectureSerializer(serializers.ModelSerializer):
 
 class LectureSerializer(serializers.ModelSerializer):
     course = CourseSerializer()
+    lecturer = LecturerSerializer()
 
     class Meta:
         model = Lecture
