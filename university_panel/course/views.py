@@ -112,7 +112,7 @@ class StudentDetailLectureView(APIView):
         if profile.is_student:
             student = profile.student.last()
             lecture_id = request.data.get('lecture_id')
-            if StudentLecture.objects.filter(student=student, lecture_id=lecture_id, status=LectureEnum.PASS):
+            if StudentLecture.objects.filter(student=student, lecture_id=lecture_id):
                 return Response(
                     status=status.HTTP_403_FORBIDDEN,
                     data={'data': 'مجاز به اخذ این درس نیستید.'}
