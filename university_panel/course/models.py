@@ -100,4 +100,4 @@ class StudentLecture(models.Model):
     status = models.CharField(choices=LectureEnum, default=LectureEnum.PASS)
 
     def __str__(self):
-        return f'{self.student.profile.user.first_name} {self.student.profile.user.last_name} --- {self.lecture.title}'
+        return f'{self.student.profile.user.first_name} {self.student.profile.user.last_name}'
