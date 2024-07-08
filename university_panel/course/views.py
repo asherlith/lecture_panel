@@ -121,7 +121,7 @@ class StudentDetailLectureView(APIView):
                 StudentLecture.objects.create(student=student, lecture_id=lecture_id, status=LectureEnum.NO_STATUS)
 
                 return Response(
-                    status=status.HTTP_403_FORBIDDEN,
+                    status=status.HTTP_200_OK,
                     data={'data': 'درس ثبت گشت.'}
                 )
 
