@@ -91,7 +91,7 @@ class CourseView(APIView):
         )
 
 
-class StudentDetailLectureView(APIView):
+class StudentLectureView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
@@ -125,12 +125,14 @@ class StudentDetailLectureView(APIView):
                     data={'data': 'درس ثبت گشت.'}
                 )
 
+
+class StudentDetailLectureView(APIView):
     def delete(self, request, *args, **kwargs):
         profile = request.user.profiles.last()
 
         if profile.is_student:
             student = profile.student.last()
-            lecture_id = request.data.get('lecture_id')
+            lecture_id = kwargs.get('pk')
 
             lec = StudentLecture.objects.filter(
                 student=student,
