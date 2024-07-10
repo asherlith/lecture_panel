@@ -21,7 +21,12 @@ class LectureView(APIView):
     def post(self, request, *args, **kwargs):
         if not request.user.profiles.last().is_student:
             lecture = InputLectureSerializer(data=request.data)
-            if lecture.is_valid():
+            if lecture.is_valid() and not Lecture.objects.filter(
+                    day=lecture.validated_data.get('day'),
+                    times=lecture.validated_data.get('times'),
+                    lecturer=lecture.validated_data.get('lecturer'),
+
+            ).exists():
                 lecture = lecture.save()
                 return Response(
                     data=self.serializer_class(lecture).data
